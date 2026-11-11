@@ -4,7 +4,7 @@ A personal, long-term investment portfolio decision-support project for an inves
 
 Rule-based portfolio allocation, risk monitoring, and explainable BIST stock research.
 
-**Status: project scaffold. No investment engine, live data connection, backtest, or trading integration has been implemented.**
+**Status: deterministic allocation MVP (milestone 1). It reads a manually prepared JSON plan and prints a proposal for human review. No live data, drawdown tracking, backtest, stock screener, or trading integration exists yet.**
 
 ## Purpose
 
@@ -78,7 +78,7 @@ personal-portfolio-manager/
 │   ├── architecture.md
 │   ├── decisions.md
 │   └── roadmap.md
-├── examples/                  # Future synthetic inputs only
+├── examples/                  # Synthetic plan files (not market data)
 ├── src/
 │   └── personal_portfolio_manager/
 │       ├── portfolio/         # Valuation, weights, deviations
@@ -87,10 +87,29 @@ personal-portfolio-manager/
 │       ├── research/          # Future BIST screening and stock research
 │       ├── data/              # Input validation and provider adapters
 │       └── backtesting/       # Historical evaluation after the MVP
-└── tests/                    # Future tests alongside implementation
+└── tests/                     # pytest suite
 ```
 
-Empty directories contain `.gitkeep` placeholders. There is currently nothing to install or run. Python packaging, dependencies, and automated checks will be added with the first implementation milestone.
+Directories that are still empty (`research/`, `backtesting/`) contain `.gitkeep` placeholders.
+
+## Usage
+
+Requires Python 3.11+.
+
+```bash
+py -3.13 -m venv .venv
+.venv/Scripts/python -m pip install -e ".[dev]"     # Windows; use .venv/bin/python elsewhere
+
+.venv/Scripts/ppm allocate examples/later-month.json          # Turkish text report
+.venv/Scripts/ppm allocate examples/later-month.json --json   # data for a future UI
+.venv/Scripts/python -m pytest
+```
+
+A plan file contains the date, contribution, dated FX rates, instruments (kind, asset class, price and price date, `min_increment`, `settlement_days`), holdings tagged `portfolio` or `emergency`, TRY cash (with `available_on` for cash awaiting settlement), targets with `buy_instruments`, optional limit overrides and the emergency fund (`monthly_expense`, `months`). See `examples/` and [decisions](docs/decisions.md).
+
+Exit codes: `0` proposal ready for review, `2` invalid input, `3` blocked by stale prices or FX rates.
+
+Keep real plan files outside the repository or under the ignored `/private/` folder.
 
 ## Development order
 

@@ -1,0 +1,33 @@
+{
+  "as_of": "2026-11-11",
+  "contribution": "20000",
+  "emergency_fund": { "monthly_expense": "5000", "months": 6 },
+  "fx_rates": [
+    { "currency": "USD", "rate_to_try": "40.00", "as_of": "2026-11-11", "source": "synthetic" }
+  ],
+  "instruments": [
+    { "id": "HF_A", "name": "Örnek hisse fonu A", "kind": "fund", "asset_class": "equity",
+      "price": "5.00", "price_as_of": "2026-11-11", "min_increment": "1", "settlement_days": 2 },
+    { "id": "HF_B", "name": "Örnek hisse fonu B", "kind": "fund", "asset_class": "equity",
+      "price": "3.20", "price_as_of": "2026-11-11", "min_increment": "1", "settlement_days": 2 },
+    { "id": "HF_C", "name": "Örnek hisse fonu C", "kind": "fund", "asset_class": "equity",
+      "price": "12.50", "price_as_of": "2026-11-11", "min_increment": "1", "settlement_days": 2 },
+    { "id": "ALTIN", "name": "Örnek gram altın", "kind": "commodity", "asset_class": "gold",
+      "price": "3000.00", "price_as_of": "2026-11-11", "min_increment": "0.01", "settlement_days": 0 },
+    { "id": "GUMUS", "name": "Örnek gram gümüş", "kind": "commodity", "asset_class": "silver",
+      "price": "40.00", "price_as_of": "2026-11-11", "min_increment": "0.01", "settlement_days": 0 },
+    { "id": "USD", "name": "ABD doları", "kind": "currency", "asset_class": "fx", "currency": "USD",
+      "price": "1", "price_as_of": "2026-11-11", "min_increment": "0.01", "settlement_days": 0 },
+    { "id": "PPF", "name": "Örnek para piyasası fonu", "kind": "fund", "asset_class": "try_liquid",
+      "price": "1.00", "price_as_of": "2026-11-11", "min_increment": "1", "settlement_days": 1 }
+  ],
+  "holdings": [],
+  "cash": [],
+  "targets": [
+    { "asset_class": "equity", "weight": "0.40", "buy_instruments": ["HF_A", "HF_B", "HF_C"] },
+    { "asset_class": "gold", "weight": "0.20", "buy_instruments": ["ALTIN"] },
+    { "asset_class": "fx", "weight": "0.20", "buy_instruments": ["USD"] },
+    { "asset_class": "try_liquid", "weight": "0.15", "buy_instruments": ["PPF"] },
+    { "asset_class": "silver", "weight": "0.05", "buy_instruments": ["GUMUS"] }
+  ]
+}

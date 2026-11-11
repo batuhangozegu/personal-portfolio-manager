@@ -1,13 +1,15 @@
 # Roadmap
 
-## 0. Project scaffold — current deliverable
+## 0. Project scaffold — done
 
 - README, project context, proposed architecture, and development milestones.
 - Empty source, test, and synthetic-example folders.
 - Ignore rules and an environment configuration placeholder.
 - No Python implementation, dependency installation, or live integration.
 
-## 1. Deterministic allocation MVP
+## 1. Deterministic allocation MVP — implemented, pending review
+
+Drawdown review states are not implemented yet: they need a cash-flow-adjusted performance history, which arrives with milestone 2. The report shows the risk state as unknown.
 
 Agree on target weights, instrument classifications, input format, risk restrictions, and rounding before coding.
 

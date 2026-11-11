@@ -99,22 +99,23 @@ def proportional_fill(
     """Split ``budget`` in proportion to ``shares``, never exceeding ``caps``.
 
     A key that would exceed its cap is pinned at the cap and the rest is
-    re-split among the others. Results are floored to whole kuruş.
+    re-split among the others. Results are floored to whole kuruş and keep
+    the key order of ``shares``, so the outcome is deterministic.
     """
     fixed: dict[K, Decimal] = {}
-    free = {c for c, s in shares.items() if s > 0}
+    free = [c for c, s in shares.items() if s > 0]  # list, not set: keep input order
     while free:
         rest = budget - sum(fixed.values(), ZERO)
         total_share = sum((shares[c] for c in free), ZERO)
         tentative = {c: rest * shares[c] / total_share for c in free}
-        over = {c for c in free if tentative[c] > caps[c]}
+        over = [c for c in free if tentative[c] > caps[c]]
         if not over:
             fixed.update(tentative)
             break
         for c in over:
             fixed[c] = caps[c]
-        free -= over
-    return {c: _floor(v, CENT) for c, v in fixed.items()}
+        free = [c for c in free if c not in over]
+    return {c: _floor(fixed[c], CENT) for c in shares if c in fixed}
 
 
 def allocate(plan: Plan) -> Proposal:
@@ -246,8 +247,8 @@ def allocate(plan: Plan) -> Proposal:
             instrument_id=inst.id, instrument_name=inst.name, asset_class=ac,
             quantity=quantity, unit_price=plan.price_try(inst), cost=cost,
             reason=(
-                f"{CLASS_LABELS[ac]} hedefin altında: hedef {pct(targets[ac])}, "
-                f"şu an {pct(weights_before[ac])}, alım sonrası {pct(weights_after[ac])}."
+                f"{CLASS_LABELS[ac]}, katkı sonrası portföyde hedefe {tl(deficit[ac])} eksik kalıyordu. "
+                f"Hedef {pct(targets[ac])}, şu an {pct(weights_before[ac])}, alım sonrası {pct(weights_after[ac])}."
             ),
         )
         for ac, inst, quantity, cost in bought
