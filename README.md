@@ -76,6 +76,7 @@ personal-portfolio-manager/
 ├── docs/
 │   ├── project-context.md
 │   ├── architecture.md
+│   ├── decisions.md
 │   └── roadmap.md
 ├── examples/                  # Future synthetic inputs only
 ├── src/
@@ -93,7 +94,7 @@ Empty directories contain `.gitkeep` placeholders. There is currently nothing to
 
 ## Development order
 
-See [the roadmap](docs/roadmap.md) for acceptance criteria and [the architecture](docs/architecture.md) for module boundaries. Confirm target weights and data conventions before implementing allocation logic.
+See [the roadmap](docs/roadmap.md) for acceptance criteria and [the architecture](docs/architecture.md) for module boundaries. Agreed MVP conventions (input format, limits, rounding, settlement, target weights) are recorded in [decisions](docs/decisions.md).
 
 ## Privacy and scope
 

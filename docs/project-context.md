@@ -29,6 +29,8 @@ The 5% single-equity limit, 15% single-fund limit, 7.5% silver limit, ±5 percen
 
 ## Decisions still needed
 
+Items 1 (asset-class level), 3 (unused cash) and 4 (input format) are resolved in [decisions.md](decisions.md), along with rounding and a settlement rule. Instrument-level choices, drawdown re-entry rules and data sources remain open.
+
 1. Initial target weights by asset class and, where applicable, instrument.
 2. Initial instruments, fund categories, and a definition of “risky purchase”.
 3. Rules for restricted purchases, unused cash, and re-entry after a drawdown review.
