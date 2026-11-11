@@ -39,6 +39,7 @@ def test_json_output_is_serializable_and_exact(capsys):
 def test_text_report_mentions_pending_settlement():
     text = render_text(allocate(load_plan(EXAMPLES / "later-month.json")))
     assert "takasta" in text and "emir değildir" in text
+    assert "Yatırım tavsiyesi değildir" in text
 
 
 def test_invalid_file_exit_code(tmp_path, capsys):

@@ -57,8 +57,33 @@ Rationale: a 40% equity decline alone implies roughly a 16% portfolio impact, le
 - Each target lists `buy_instruments` (zero or more). New money for a class is split evenly across them, each within its own cap; overflow goes to the class's other instruments.
 - Consequence of the 15% single-fund and 5% single-stock caps: a 40% equity target needs at least three equity funds (or a mix of funds and stocks) to be reachable. A 20% gold or FX target held through a single fund would also hit the 15% cap; physical/gram gold and FX cash have no per-instrument cap.
 - A class with no buy instrument keeps its share as TRY cash, with a note. For TRY cash/liquid that is the intended behaviour (kept cash).
+- Intended equity sleeve: a basket of roughly 10–15 individually selected BIST stocks, not a single fund and not short-term trading. The basket is revised with market conditions through the stock screener (milestone 3) and portfolio-aware recommendations (milestone 5). Until then, the even split across `buy_instruments` is a placeholder for screener-driven weights.
 
-## 8. Starting state
+## 8. Stocks and funds
+
+- The equity class initially holds **direct BIST stocks only**; that basket is the project's core. Funds serve other roles (money-market fund for TRY liquid, gold/FX funds where useful).
+- Selection and reporting keep stocks and funds apart (stocks via the screener; funds by their own criteria such as fees, size, track record). Risk measurement stays exposure-based, so an equity fund, if added later, still counts as equity.
+- If equity funds are added later, split the equity target into sub-targets (stock basket / equity funds).
+
+## 9. Stock screener — layer structure
+
+Three layers: (1) eligibility filters (pass/fail), (2) scoring with established models (Piotroski F-Score, Greenblatt Magic Formula, Altman Z-Score plus supporting ratios), (3) basket construction (top 10–15, 5% single-stock cap, sector limit). Growth must be measured in real terms because of TMS 29 inflation accounting from 2023 year-end statements.
+
+### Layer 1: eligibility filters (draft thresholds, configurable)
+
+| # | Filter | Draft rule |
+| --- | --- | --- |
+| 1 | Market | Exclude Watchlist Market (Yakın İzleme Pazarı) and stocks under exchange surveillance measures (VBTS tedbir) |
+| 2 | Liquidity | In BIST 100 **or** top 150 by 3-month median daily traded value (rank-based, so it does not erode with inflation) |
+| 3 | Free float | Actual free-float ratio ≥ 20% |
+| 4 | History | At least 3 years (12 quarters) of financial statements |
+| 5 | Profitability | Trailing-12-month net profit > 0 **and** profitable in at least 2 of the last 3 years |
+| 6 | Equity | Shareholders' equity > 0 |
+| 7 | Audit | Exclude adverse, qualified or disclaimer of opinion |
+| 8 | Freshness | Exclude and flag when the latest statement is older than expected |
+| 9 | Sector | Initially exclude banks, insurance, factoring/leasing, REITs (GYO) and holdings; their accounting makes EBITDA/debt ratios meaningless. May return later with sector-specific rules |
+
+## 10. Starting state
 
 - Starting from an empty portfolio. The first contribution is allocated directly by target weights; later contributions close deviations.
 - Instrument-level selection (which funds/equities) is deferred; the MVP can operate at asset-class level first.

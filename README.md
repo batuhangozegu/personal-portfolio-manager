@@ -120,3 +120,9 @@ See [the roadmap](docs/roadmap.md) for acceptance criteria and [the architecture
 Use synthetic examples in version control. Keep actual balances, account exports, credentials, and local datasets outside tracked files. `.gitignore` is a convenience, not a guarantee: inspect staged files before committing.
 
 Live market data, broker connections, automated orders, tax calculations, notifications to external services, and ML models are outside the initial scope. No tax assumptions from the planning chat have been adopted as verified rules.
+
+## Yasal uyarı / Disclaimer
+
+**Yatırım tavsiyesi değildir.** Bu proje kişisel kullanım için geliştirilmiş bir karar destek aracıdır. Ürettiği öneriler, puanlar ve raporlar 6362 sayılı Sermaye Piyasası Kanunu kapsamında yatırım danışmanlığı değildir. Kurallar ve varsayımlar doğrulanmamış olabilir, veriler hatalı veya eksik olabilir ve geçmiş sonuçlar gelecekteki getirileri garanti etmez. Her yatırım kararının sorumluluğu kararı verene aittir.
+
+**Not investment advice.** This is a personal decision-support tool. Its proposals, scores and reports are not investment advice. Rules may be unvalidated, data may be wrong or incomplete, and past results do not guarantee future returns. You are solely responsible for your own investment decisions.

@@ -43,7 +43,7 @@ def render_text(p: Proposal) -> str:
     out: list[str] = []
     status = "ENGELLENDİ" if p.status == BLOCKED else "ONAYINI BEKLİYOR"
     out.append(f"Katkı önerisi · {p.as_of} · {status}")
-    out.append("Bu bir öneridir, emir değildir. Uygulamadan önce kendin kontrol et.")
+    out.append("Yatırım tavsiyesi değildir. Bu bir öneridir, emir değildir; uygulamadan önce kendin kontrol et.")
     out.append("")
 
     if p.blockers:
