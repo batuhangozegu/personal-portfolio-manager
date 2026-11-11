@@ -83,6 +83,42 @@ Three layers: (1) eligibility filters (pass/fail), (2) scoring with established 
 | 8 | Freshness | Exclude and flag when the latest statement is older than expected |
 | 9 | Sector | Initially exclude banks, insurance, factoring/leasing, REITs (GYO) and holdings; their accounting makes EBITDA/debt ratios meaningless. May return later with sector-specific rules |
 
+### Layer 2: scoring ("gates, then rank")
+
+1. **Safety gate:** Altman Z''-Score (emerging-market / non-manufacturing variant). Distress zone → excluded; grey zone → allowed but flagged.
+2. **Quality gate:** Piotroski F-Score ≥ 6 (of 9).
+3. **Ranking:** Greenblatt Magic Formula — rank by return on capital (EBIT / (net working capital + net fixed assets)) and by earnings yield (EBIT / enterprise value); order by the sum of the two ranks. Ratio-based, so relatively robust to TMS 29.
+4. **Supporting ratios** (ROE, net debt/EBITDA, free cash flow, P/E, P/B) are shown as explanation only and do not enter the score, to keep it explainable and limit overfitting in backtests.
+
+Each gate and the ranking are evaluated separately in backtesting (milestone 4).
+
+### Layer 3: basket construction
+
+| # | Topic | Rule |
+| --- | --- | --- |
+| 1 | Size | Target 12 stocks (range 10–15) |
+| 2 | Too few candidates | Do not relax rules to fill the basket; hold fewer stocks, leave the unfilled equity share in cash and report it |
+| 3 | Weighting | Equal weight within the basket |
+| 4 | Sector limit | At most 3 stocks per sector |
+| 5 | Review cadence | Quarterly, after the financial-statement season |
+| 6 | Hysteresis | A new stock enters only from the top 12; a held stock stays while it ranks in the top 25 and passes the gates |
+| 7 | Leaving the basket | New purchases stop; the stock is marked "hold, do not add" unless a sell trigger below applies |
+
+### Sell proposals (always require human approval)
+
+The allocation engine still never sells to rebalance. Sales are proposed only on these triggers:
+
+| Priority | Trigger | Proposal |
+| --- | --- | --- |
+| Urgent | Altman Z'' in distress zone, negative equity, adverse audit opinion, or moved to the Watchlist Market | Sell the whole position |
+| High | F-Score ≤ 3, or trailing-12-month net loss | Sell the whole position |
+| Normal | Outside the top 25 for **2 consecutive** quarterly reviews | Consider selling; redirect proceeds to the basket |
+| Normal | Position above 1.5× the single-stock cap (7.5%) | Trim back to the 5% cap |
+
+Not sell triggers: a price decline alone (no stop-loss), a single quarter's rank drop, short-term news.
+
+Every sell proposal states the triggering rule and data, estimated commission, settlement date (proceeds are unusable until T+2) and where the proceeds would go under the same allocation rules. The system never places orders.
+
 ## 10. Starting state
 
 - Starting from an empty portfolio. The first contribution is allocated directly by target weights; later contributions close deviations.
