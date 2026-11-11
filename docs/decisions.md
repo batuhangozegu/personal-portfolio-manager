@@ -52,7 +52,13 @@ Rationale: a 40% equity decline alone implies roughly a 16% portfolio impact, le
 - Contribution priority: while the emergency fund is below target, contributions go to it first (up to the shortfall); only the remainder goes to the portfolio. If the fund is drawn down, refilling it takes priority again.
 - The allocation report shows the emergency fund's current balance, target and shortfall separately from portfolio weights.
 
-## 7. Starting state
+## 7. Buy instruments per asset class
+
+- Each target lists `buy_instruments` (zero or more). New money for a class is split evenly across them, each within its own cap; overflow goes to the class's other instruments.
+- Consequence of the 15% single-fund and 5% single-stock caps: a 40% equity target needs at least three equity funds (or a mix of funds and stocks) to be reachable. A 20% gold or FX target held through a single fund would also hit the 15% cap; physical/gram gold and FX cash have no per-instrument cap.
+- A class with no buy instrument keeps its share as TRY cash, with a note. For TRY cash/liquid that is the intended behaviour (kept cash).
+
+## 8. Starting state
 
 - Starting from an empty portfolio. The first contribution is allocated directly by target weights; later contributions close deviations.
 - Instrument-level selection (which funds/equities) is deferred; the MVP can operate at asset-class level first.

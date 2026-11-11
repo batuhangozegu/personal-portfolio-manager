@@ -91,7 +91,7 @@ def stale_inputs(plan: Plan) -> list[str]:
     """Prices or FX rates needed for this run that are older than allowed."""
     cutoff = plan.as_of - timedelta(days=plan.limits.max_price_age_days)
     needed = {h.instrument_id for h in plan.holdings}
-    needed |= {t.buy_instrument for t in plan.targets if t.buy_instrument}
+    needed |= {i for t in plan.targets for i in t.buy_instruments}
 
     problems: list[str] = []
     currencies: set[str] = set()

@@ -18,6 +18,10 @@ BASE: dict[str, Any] = {
          "price": "100", "price_as_of": "2026-11-11", "min_increment": "1", "settlement_days": 2},
         {"id": "EQ_FUND", "name": "Synthetic equity fund", "kind": "fund", "asset_class": "equity",
          "price": "2", "price_as_of": "2026-11-11", "min_increment": "1", "settlement_days": 2},
+        {"id": "EQ_FUND_B", "name": "Synthetic equity fund B", "kind": "fund", "asset_class": "equity",
+         "price": "2", "price_as_of": "2026-11-11", "min_increment": "1", "settlement_days": 2},
+        {"id": "EQ_FUND_C", "name": "Synthetic equity fund C", "kind": "fund", "asset_class": "equity",
+         "price": "2", "price_as_of": "2026-11-11", "min_increment": "1", "settlement_days": 2},
         {"id": "GOLD", "name": "Synthetic gram gold", "kind": "commodity", "asset_class": "gold",
          "price": "3000", "price_as_of": "2026-11-11", "min_increment": "0.01", "settlement_days": 0},
         {"id": "SILVER", "name": "Synthetic gram silver", "kind": "commodity", "asset_class": "silver",
@@ -30,11 +34,11 @@ BASE: dict[str, Any] = {
     "holdings": [],
     "cash": [],
     "targets": [
-        {"asset_class": "equity", "weight": "0.40", "buy_instrument": "EQ_FUND"},
-        {"asset_class": "gold", "weight": "0.20", "buy_instrument": "GOLD"},
-        {"asset_class": "fx", "weight": "0.20", "buy_instrument": "USD"},
-        {"asset_class": "try_liquid", "weight": "0.15", "buy_instrument": "MMF"},
-        {"asset_class": "silver", "weight": "0.05", "buy_instrument": "SILVER"},
+        {"asset_class": "equity", "weight": "0.40", "buy_instruments": ["EQ_FUND", "EQ_FUND_B", "EQ_FUND_C"]},
+        {"asset_class": "gold", "weight": "0.20", "buy_instruments": ["GOLD"]},
+        {"asset_class": "fx", "weight": "0.20", "buy_instruments": ["USD"]},
+        {"asset_class": "try_liquid", "weight": "0.15", "buy_instruments": ["MMF"]},
+        {"asset_class": "silver", "weight": "0.05", "buy_instruments": ["SILVER"]},
     ],
 }
 

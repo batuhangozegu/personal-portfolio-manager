@@ -88,7 +88,7 @@ class CashBalance(_Model):
 class Target(_Model):
     asset_class: AssetClass
     weight: Fraction
-    buy_instrument: str | None = None
+    buy_instruments: list[str] = Field(default_factory=list)
 
 
 class Limits(_Model):
@@ -165,16 +165,17 @@ class Plan(_Model):
         if total != Decimal(1):
             errors.append(f"target weights must sum to exactly 1, got {total}")
         for t in self.targets:
-            if t.buy_instrument is None:
-                continue
-            inst = by_id.get(t.buy_instrument)
-            if inst is None:
-                errors.append(f"target {t.asset_class.value}: unknown buy_instrument {t.buy_instrument!r}")
-            elif inst.asset_class != t.asset_class:
-                errors.append(
-                    f"target {t.asset_class.value}: buy_instrument {inst.id!r} "
-                    f"is {inst.asset_class.value}"
-                )
+            if len(set(t.buy_instruments)) != len(t.buy_instruments):
+                errors.append(f"target {t.asset_class.value}: duplicate buy_instruments")
+            for inst_id in t.buy_instruments:
+                inst = by_id.get(inst_id)
+                if inst is None:
+                    errors.append(f"target {t.asset_class.value}: unknown buy instrument {inst_id!r}")
+                elif inst.asset_class != t.asset_class:
+                    errors.append(
+                        f"target {t.asset_class.value}: buy instrument {inst.id!r} "
+                        f"is {inst.asset_class.value}"
+                    )
 
         if errors:
             raise ValueError("; ".join(errors))

@@ -58,14 +58,14 @@ def test_missing_fx_rate_rejected():
 
 def test_future_dated_price_rejected():
     data = raw()
-    data["instruments"][2]["price_as_of"] = "2026-11-12"
+    data["instruments"][4]["price_as_of"] = "2026-11-12"
     with pytest.raises(ValidationError, match="after plan date"):
         Plan.model_validate(data)
 
 
 def test_buy_instrument_must_match_asset_class():
     data = raw()
-    data["targets"][1]["buy_instrument"] = "USD"
+    data["targets"][1]["buy_instruments"] = ["USD"]
     with pytest.raises(ValidationError, match="is fx"):
         Plan.model_validate(data)
 
