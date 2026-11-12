@@ -25,6 +25,8 @@ Acceptance criteria:
 
 ## 2. Reliable historical data
 
+**On hold:** automated access to KAP was blocked; see the project status in the README. The point-in-time store (`data/pit.py`) is implemented.
+
 Providers are selected (free sources only; see decisions.md section 11): KAP, Yahoo Finance with İş Yatırım cross-check, TCMB EVDS, TEFAS. Remaining open checks are listed there. Normalize instruments, dated FX conversions, dividends, corporate actions, fund NAV availability, and missing data. Keep raw/private datasets out of version control.
 
 Acceptance: a reproducible synthetic fixture and a documented historical dataset can be validated without future information leaking into past decisions.

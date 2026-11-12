@@ -4,7 +4,19 @@ A personal, long-term investment portfolio decision-support project for an inves
 
 Rule-based portfolio allocation, risk monitoring, and explainable BIST stock research.
 
-**Status: deterministic allocation MVP (milestone 1). It reads a manually prepared JSON plan and prints a proposal for human review. No live data, drawdown tracking, backtest, stock screener, or trading integration exists yet.**
+**Status: on hold (2026-11-12).** The deterministic allocation MVP (milestone 1) works: it reads a manually prepared JSON plan and prints a proposal for human review. Milestone 2 has its data sources decided and a point-in-time store implemented, but no live data, drawdown tracking, backtest, stock screener, or trading integration exists yet.
+
+## Project status: on hold
+
+Work is paused at milestone 2 because of an unresolved data-access blocker, and the project may be discontinued if it cannot be resolved.
+
+- **Blocker:** the stock screener depends on financial statements with publication timestamps, and the free, point-in-time source chosen for them is KAP ([decisions 11.1](docs/decisions.md)). KAP's official data API requires a data distribution agreement with Borsa İstanbul, and a single automated request to the public website (`robots.txt`) was rejected by its firewall (error page referring to kapdestek@mkk.com.tr). Bypassing that block is not an option.
+- **Done so far:** allocation MVP (milestone 1), free data-source decisions ([section 11](docs/decisions.md)), point-in-time store (`data/pit.py`).
+- **To resume, one of:**
+  1. Ask KAP (kapdestek@mkk.com.tr) whether personal, non-commercial, low-volume automated access is permitted.
+  2. Check manually in a browser what KAP offers (first year of structured statements, publication times, Watchlist Market announcements).
+  3. Fall back to another free statement source without publication dates, accepting weaker point-in-time backtests ([rule 11.5](docs/decisions.md)).
+- **If discontinued:** the allocation MVP remains usable on its own with manually prepared plan files.
 
 ## Purpose
 
