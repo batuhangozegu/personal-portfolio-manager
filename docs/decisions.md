@@ -74,8 +74,8 @@ Three layers: (1) eligibility filters (pass/fail), (2) scoring with established 
 | # | Filter | Draft rule |
 | --- | --- | --- |
 | 1 | Market | Exclude Watchlist Market (Yakın İzleme Pazarı) and stocks under exchange surveillance measures (VBTS tedbir) |
-| 2 | Liquidity | In BIST 100 **or** top 150 by 3-month median daily traded value (rank-based, so it does not erode with inflation) |
-| 3 | Free float | Actual free-float ratio ≥ 20% |
+| 2 | Liquidity | Top 150 by 3-month median daily traded value (rank-based, so it does not erode with inflation). BIST 100 membership was dropped, see 11.5 |
+| 3 | Free float | Actual free-float ratio ≥ 20% (live screening only; skipped in backtests, see 11.6) |
 | 4 | History | At least 3 years (12 quarters) of financial statements |
 | 5 | Profitability | Trailing-12-month net profit > 0 **and** profitable in at least 2 of the last 3 years |
 | 6 | Equity | Shareholders' equity > 0 |
@@ -123,3 +123,55 @@ Every sell proposal states the triggering rule and data, estimated commission, s
 
 - Starting from an empty portfolio. The first contribution is allocated directly by target weights; later contributions close deviations.
 - Instrument-level selection (which funds/equities) is deferred; the MVP can operate at asset-class level first.
+
+## 11. Data sources (milestone 2)
+
+Agreed on 2026-11-12. One data type at a time. **Only free sources are used** (see 11.5).
+
+### 11.1 Financial statements: KAP (Public Disclosure Platform)
+
+- **Source:** the public KAP website, which states that current and historical disclosures are freely accessible. Every disclosure carries a publication timestamp, so statements can be used point-in-time: a backtest may only see a statement after its publication time.
+- **Not used:** the official KAP data distribution REST API, which requires a data distribution agreement with Borsa İstanbul and MKK authorization (aimed at data vendors). Also not used as a primary source: unofficial broker endpoints without publication dates; they may serve only as a cross-check.
+- **Low-volume access only.** KAP asks that high-volume requests go through the API, not the website. Therefore:
+  - restrict fetching to the screener universe (about 150 liquid companies, see filter 2);
+  - throttle requests (several seconds apart) and spread the one-time historical backfill over several days;
+  - cache every downloaded file locally and never download it twice; quarterly updates fetch only new disclosures.
+- **Raw data stays out of version control.** The repository is public; it shares code, not KAP data.
+- **Own thin client.** Existing open-source wrappers (e.g. PyKap, MIT) are reference material only, so that publication timestamps and caching stay under our control.
+- **Open questions:** no explicit KAP terms-of-use or reuse licence text was found, and the first year of structured (XBRL/Excel) statements was not verified; check both before the backfill.
+
+### 11.2 Prices and traded volume: Yahoo Finance, checked against KAP
+
+- **Primary source:** Yahoo Finance daily data (`.IS` tickers) for personal, non-commercial use. **Cross-check:** İş Yatırım's public price data. Both are unofficial; the official Borsa İstanbul feed is licensed for data vendors and is not used.
+- **Corporate actions come from KAP.** Bonus issues (bedelsiz), rights issues and dividends are read from KAP disclosures with the same client as 11.1. On every bonus-issue date the price series is checked for an unexplained jump; mismatches are **flagged, never silently patched**.
+- **Market value from KAP data:** share count is derived from paid-in capital in the statements, so market cap = price × shares and EV = market cap + net debt, without relying on the price vendor's fundamentals.
+- **Known gap:** delisted stocks are usually missing from free price sources, so backtests carry survivorship bias. Reports state this explicitly; results are treated as optimistic.
+- Same access rules as 11.1: low volume, local cache, raw data out of version control.
+
+### 11.3 Macro and FX: TCMB EVDS
+
+- **Single source:** the Central Bank's EVDS service (official, free, requires registration and an API key) for monthly CPI (TÜFE, published by TÜİK and served via EVDS), daily USD/TRY and EUR/TRY, and policy/deposit rates.
+- **FX convention:** TCMB indicative buying rate (announced daily at 15:30) for dated conversions of foreign-currency holdings.
+- **Point-in-time rule:** a month's CPI becomes visible to backtests only from the 5th day of the following month (a simple, conservative publication lag).
+- **Secrets:** the API key lives in a local, git-ignored `.env`; `.env.example` gets only an empty `EVDS_API_KEY=` line when the client is implemented.
+
+### 11.4 Funds, gold and silver
+
+- **Funds:** daily prices from TEFAS (Takasbank's official fund platform), which publishes historical prices free of charge. There is no public official API; only the handful of held or candidate funds are fetched, with the same low-volume and caching rules as 11.1.
+- **Fund price timing:** a fund's price is published at the end of the day and orders execute at a forward price; backtests must not trade at the same day's price (modelled in milestone 4).
+- **Gram gold and silver:** derived, not sourced: gram price (TRY) = ounce price (USD) / 31.1035 × USD/TRY, with the ounce price from Yahoo (11.2) and USD/TRY from EVDS (11.3). Bank buy/sell spreads differ from this mid price and are modelled as a cost in milestone 4.
+
+### 11.5 Free sources only
+
+- Paid subscriptions and licensed data feeds are out of scope. A free source is used when its access is allowed; if a criterion needs data that cannot be obtained free, the criterion is removed rather than approximated.
+- Applied: **BIST 100 membership is dropped from the liquidity filter.** Point-in-time historical index constituents are not freely available, and using today's list in backtests would leak future information. The rank by median traded value, computed from 11.2 data at each date, covers the same purpose.
+
+### 11.6 Market status and free float
+
+| Data | Free source | History | Use |
+| --- | --- | --- | --- |
+| Volatility-based measures (VBTS tedbir) | Borsa İstanbul announcements on KAP | Yes, with publication time | Filter 1, via the KAP client (11.1) |
+| Watchlist Market (Yakın İzleme Pazarı) transfers | Expected to be Borsa İstanbul announcements on KAP; **not yet verified** | Yes, if on KAP | Filter 1 if verified; otherwise the criterion is removed (11.5) |
+| Free-float ratio | MKK, published free on KAP company pages and VAP | **No.** MKK changed the method in September 2026 and now publishes daily; earlier ratios are not comparable | Filter 3 in live screening only |
+
+- In backtests the free-float filter is **disabled and reported as such**; applying today's ratio to past dates would leak future information.
