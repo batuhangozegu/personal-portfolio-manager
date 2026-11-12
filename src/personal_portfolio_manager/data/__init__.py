@@ -1,4 +1,4 @@
-"""Input schema and loading."""
+"""Input schema, loading and the point-in-time store."""
 
 from .loader import load_plan, parse_plan
 from .models import (
@@ -14,8 +14,13 @@ from .models import (
     Plan,
     Target,
 )
+from .pit import AsOfView, DuplicateObservationError, Observation, PointInTimeStore
 
 __all__ = [
+    "AsOfView",
+    "DuplicateObservationError",
+    "Observation",
+    "PointInTimeStore",
     "AssetClass",
     "Bucket",
     "CashBalance",

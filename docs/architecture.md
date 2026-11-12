@@ -8,6 +8,8 @@ This document describes future module boundaries. No modules have been implement
 
 `portfolio/` will calculate TRY values, current weights, and deviations. Target weights must sum to 100%; snapshots must avoid duplicate holdings and double-counted cash. Use decimal arithmetic for money and define rounding explicitly. Handle an empty portfolio and zero contribution without division errors.
 
+Historical source data goes through `data/pit.py`: every observation records the period it describes and the timezone-aware moment it was published, and queries are made as of a moment, so restatements and late publications never leak into earlier decisions. Local datasets live as JSON Lines under the git-ignored `/data/` directory; `examples/pit-fixture.jsonl` is a synthetic fixture.
+
 ## Risk review
 
 `risk/` will check instrument and asset-class concentration and derive review states from drawdown thresholds. Define fund overlap handling separately from per-instrument caps. Existing cap breaches should be reported even when new deposits dilute them.

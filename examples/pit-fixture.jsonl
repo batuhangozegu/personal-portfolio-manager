@@ -1,0 +1,5 @@
+{"entity":"SYNTH","field":"net_income","period":"2024-12-31","value":"1000","published_at":"2025-03-10T18:30:00+03:00","source":"synthetic","reference":"synthetic-fy2024"}
+{"entity":"SYNTH","field":"net_income","period":"2024-12-31","value":"900","published_at":"2025-05-02T19:00:00+03:00","source":"synthetic","reference":"synthetic-fy2024-restated"}
+{"entity":"SYNTH","field":"net_income","period":"2025-03-31","value":"250","published_at":"2025-05-08T18:45:00+03:00","source":"synthetic","reference":"synthetic-q1-2025"}
+{"entity":"SYNTH","field":"close","period":"2025-05-08","value":"42.50","published_at":"2025-05-08T18:10:00+03:00","source":"synthetic"}
+{"entity":"TUFE","field":"index","period":"2025-04-30","value":"2900.00","published_at":"2025-05-05T00:00:00+03:00","source":"synthetic"}
